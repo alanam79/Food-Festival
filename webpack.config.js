@@ -8,7 +8,12 @@ const BundleAnalyzerPlugin =
 // plugin to create our web manifest
 const WebpackPwaManifest = require("webpack-pwa-manifest");
 
-module.exports = {
+const config = {
+  // mode allows to work on localhost: 8080
+  mode: "development",
+  devServer: {
+    static: "./",
+  },
   // the entry point is the root of the bundle and beginning of the dependency graph
   entry: {
     app: "./assets/js/script.js",
@@ -84,3 +89,5 @@ module.exports = {
   // mode is the mode we run the webpack, usually "production"
   mode: "development",
 };
+
+module.exports = config;
