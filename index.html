@@ -173,4 +173,16 @@
   </footer>
 </body>
 
+<!-- register the service worker -->
+<script>
+  (function () {
+    if ("serviceWorker" in navigator) {
+      // It's important that we include the ./ in front of service-worker.js or it will break
+      navigator.serviceWorker.register("./service-worker.js")
+        .then(() => console.log("Service Worker registered successfully."))
+        .catch(error => console.log("Service Worker registration failed:", error));
+    }
+  })();
+</script>
+
 </html>
