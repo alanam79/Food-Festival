@@ -8,11 +8,47 @@ const BundleAnalyzerPlugin =
 
 module.exports = {
   // the entry point is the root of the bundle and beginning of the dependency graph
-  entry: "./assets/js/script.js",
+  entry: {
+    app: "./assets/js/script.js",
+    events: "./assets/js/events.js",
+    schedule: "./assets/js/schedule.js",
+    tickets: "./assets/js/tickets.js",
+  },
   //   output bundles code and sends to dist folder
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "main.bundle.js",
+    // due to bundling, the entry object will be used in place of [name], for example, events
+    filename: "[name].bundle.js",
+    path: __dirname + "/dist",
+  },
+  // file loader
+  module: {
+    rules: [
+      {
+        // object identifies the type of files to pre-process
+        test: /\.jpg$/i,
+        use: [
+          {
+            // where the actual loader is implemented - file loader must be before image-webpack-loader (optimizer for size)
+            loader: "file-loader",
+            // returns the name of the file with the file extension
+            options: {
+              esModule: false,
+              name(file) {
+                return "[path][name].[ext]";
+              },
+              // function that changes our assignment URL by replacing the ../ from our require() statement with /assets/
+              publicPath: function (url) {
+                return url.replace("../", "/assets/");
+              },
+            },
+          },
+          {
+            // optimizer to reduce image size
+            loader: "image-webpack-loader",
+          },
+        ],
+      },
+    ],
   },
   plugins: [
     new webpack.ProvidePlugin({
@@ -21,7 +57,7 @@ module.exports = {
     }),
     // will analyze our bundle sizes to see how much JavaScript is being processed by the browser
     new BundleAnalyzerPlugin({
-      analyzerMode: "static", // the static requires a report to output to an report.HTML file in the dist folder, 
+      analyzerMode: "static", // the static requires a report to output to an report.HTML file in the dist folder,
       // can also set to disable to temporarily stop the reporting and automatic opening of the report
     }),
   ],
