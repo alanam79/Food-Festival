@@ -5,6 +5,8 @@ const webpack = require("webpack");
 // import webpack bundle-analyzer
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+// plugin to create our web manifest
+const WebpackPwaManifest = require("webpack-pwa-manifest");
 
 module.exports = {
   // the entry point is the root of the bundle and beginning of the dependency graph
@@ -59,6 +61,24 @@ module.exports = {
     new BundleAnalyzerPlugin({
       analyzerMode: "static", // the static requires a report to output to an report.HTML file in the dist folder,
       // can also set to disable to temporarily stop the reporting and automatic opening of the report
+    }),
+    // manifest plugin
+    new WebpackPwaManifest({
+      name: "Food Event",
+      short_name: "Foodies",
+      description: "An app that allows you to view upcoming food events.",
+      start_url: "../index.html",
+      background_color: "#01579b",
+      theme_color: "#ffffff",
+      fingerprints: false,
+      inject: false,
+      icons: [
+        {
+          src: path.resolve("assets/img/icons/icon-512x512.png"),
+          sizes: [96, 128, 192, 256, 384, 512],
+          destination: path.join("assets", "icons"),
+        },
+      ],
     }),
   ],
   // mode is the mode we run the webpack, usually "production"
